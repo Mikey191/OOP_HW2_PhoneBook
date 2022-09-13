@@ -18,67 +18,84 @@
 #include <fstream>
 using namespace std;
 
-#define Size1 20
 
 class PhoneBook
 {
 private:
-	char* Name = new char[Size1];
-	int SizeName = Size1;
 	char Number[20];
+
+	char* Name;
+	int SizeName;
+
 	char Info[20];
 
 public:
 	PhoneBook()
 	{
-		char temp[20] = "\0";
-		Name = temp;
+		SizeName = 80;
+		Name = new char[80];
+		
+
+		//char temp[20] = "\0";
+		//Name = temp;
+
 		Number[0] = '\0';
+
 		Info[0] = '\0';
+
 		cout << "Constr#1 " << this << endl;
 	}
 
 	PhoneBook(const PhoneBook& tempSub)
 	{
-		Name = new char[tempSub.SizeName];
 		SizeName = tempSub.SizeName;
-		for (int i = 0; i <= tempSub.SizeName; i++)
+		Name = new char[SizeName + 1];
+		
+		for (int i = 0; i <= SizeName; i++)
 		{
 			Name[i] = tempSub.Name[i];
 		}
-		cout << "const copy..."<<this << endl;
+		cout << "const copy..."<< this << endl;
 		cout << "TempSub Name: " << tempSub.Name << endl;
 		cout << "This Name: " << Name << endl;
 		system("pause");
 
 		//strcpy_s(this->Number, 20, tempSub.Number);
+
 		for (int i = 0; i < 20; i++)
 		{
 			Number[i] = tempSub.Number[i];
 		}
+
 		//strcpy_s(this->Info, 20, tempSub.Info);
 		for (int i = 0; i < 20; i++)
 		{
 			Info[i] = tempSub.Info[i];
 		}
 	}
-	~PhoneBook() { cout << "Destruct..."<<this << endl;
-	system("pause");
+	~PhoneBook() { cout << "Destruct..."<< this << endl;
+	//system("pause");
 	delete[] Name; }
 
 	void input() 
 	{
-		cout << "\nEnter Name: ";
+		cout << "Enter Name: ";
+		cin >> Name;
+
+		/*cout << "\nEnter Name: ";
 		char tempName[20];
 		cin >> tempName;
 		Name = new char[strlen(tempName)+1];
 		for (int i = 0; i < strlen(tempName); i++)
 		{
 			Name[i] = tempName[i];
-		}
+		}*/
+
 		//strcpy_s(this->Name, 20, tempName);
+
 		cout << "\nEnter Number: ";
 		cin>>Number;
+
 		cout << "\nEnter Info: ";
 		cin >> Info;
 	}
@@ -123,18 +140,13 @@ void savedata_bin(PhoneBook* arr, int& size)
 	fclose(file);
 }
 
-PhoneBook Add()
-{
-	PhoneBook temp;
-	temp.input();
-	cout << "Add sub" << endl;
-	system("pause");
-	return temp;
-}
-
 void AddSubscruber(PhoneBook* arr, int& size)
 {
-	arr[size+1] = Add();
+	/*PhoneBook temp;
+	temp.input();
+	cout << "Add sub" << endl;
+	system("pause");*/
+	arr[size].input();
 	size++;
 }
 
@@ -177,6 +189,8 @@ void ShowAllSubscruber(PhoneBook* arr, int& size)
 int main()
 {
 	PhoneBook arr[100];
+	cout<<"Size of: "<< sizeof(PhoneBook) << endl;
+	system("pause");
 	int size = 0;
 	int k;
 	//loaddata_bin(arr, size);
