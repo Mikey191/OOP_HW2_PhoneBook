@@ -99,15 +99,14 @@ void loaddata_bin(PhoneBook* arr, int& size)
 	{
 		
 		//fread(&arr[size], sizeof(PhoneBook), 1, file);
-		for (int i = 0; i < size; i++)
-		{
+		
 		fread(&arr[size].SizeName, sizeof(int), 1, file);
 		fread(&arr[size].Number, sizeof(char), 20, file);
 		fread(&arr[size].Info, sizeof(char), 20, file);
 		arr[size].Name = new char[arr[size].SizeName];
 		fread(&arr[size].Name, sizeof(char), arr[size].SizeName, file);
-		}
-		cout << arr[size].GetName() << endl;
+	
+		//cout << arr[size].GetName() << endl;
 
 		size++;
 	}
