@@ -18,39 +18,29 @@
 #include <fstream>
 using namespace std;
 
-#define Size1 20
 
 class PhoneBook
 {
 private:
-	char* Name = new char[Size1];
-	int SizeName = Size1;
-	char Number[20];
-	char Info[20];
+	
 
 public:
-	PhoneBook()
-	{
-		char temp[20] = "\0";
-		Name = temp;
-		Number[0] = '\0';
-		Info[0] = '\0';
-		cout << "Constr#1 " << this << endl;
-	}
+	char Number[20];
+	char Info[20];
+	char* Name;
+	int SizeName;
+
+	//PhoneBook(char* name) : Name{ new char[SizeName] }, SizeName{ strlen(name) + 1 }, Number{ '\0' }, Info{ '\0' }{}
+	PhoneBook(): SizeName{20}, Name{new char[20]}, Number{ '\0' }, Info{ '\0' }{}
 
 	PhoneBook(const PhoneBook& tempSub)
 	{
-		Name = new char[tempSub.SizeName];
+		Name = new char[tempSub.SizeName+1];
 		SizeName = tempSub.SizeName;
 		for (int i = 0; i <= tempSub.SizeName; i++)
 		{
 			Name[i] = tempSub.Name[i];
 		}
-		cout << "const copy..."<<this << endl;
-		cout << "TempSub Name: " << tempSub.Name << endl;
-		cout << "This Name: " << Name << endl;
-		system("pause");
-
 		//strcpy_s(this->Number, 20, tempSub.Number);
 		for (int i = 0; i < 20; i++)
 		{
@@ -62,23 +52,22 @@ public:
 			Info[i] = tempSub.Info[i];
 		}
 	}
-	~PhoneBook() { cout << "Destruct..."<<this << endl;
-	system("pause");
-	delete[] Name; }
+	~PhoneBook() { 	delete[] Name; }
 
 	void input() 
 	{
 		cout << "\nEnter Name: ";
-		char tempName[20];
+		/*char tempName[20];
 		cin >> tempName;
 		Name = new char[strlen(tempName)+1];
 		for (int i = 0; i < strlen(tempName); i++)
 		{
 			Name[i] = tempName[i];
-		}
+		}*/
 		//strcpy_s(this->Name, 20, tempName);
+		cin >> Name;
 		cout << "\nEnter Number: ";
-		cin>>Number;
+		cin>> Number;
 		cout << "\nEnter Info: ";
 		cin >> Info;
 	}
@@ -105,13 +94,26 @@ void loaddata_bin(PhoneBook* arr, int& size)
 		fclose(file);
 	}
 	fopen_s(&file, filename, "rb");
+	
 	while (!feof(file))
 	{
-		fread(&arr[size], sizeof(PhoneBook), 1, file);
+		
+		//fread(&arr[size], sizeof(PhoneBook), 1, file);
+		for (int i = 0; i < size; i++)
+		{
+		fread(&arr[size].SizeName, sizeof(int), 1, file);
+		fread(&arr[size].Number, sizeof(char), 20, file);
+		fread(&arr[size].Info, sizeof(char), 20, file);
+		arr[size].Name = new char[arr[size].SizeName];
+		fread(&arr[size].Name, sizeof(char), arr[size].SizeName, file);
+		}
+		cout << arr[size].GetName() << endl;
+
 		size++;
 	}
 	fclose(file);
 	size--;
+	system("pause");
 }
 
 void savedata_bin(PhoneBook* arr, int& size)
@@ -119,22 +121,31 @@ void savedata_bin(PhoneBook* arr, int& size)
 	FILE* file;
 	const char* filename = "File.txt";
 	fopen_s(&file, filename, "wb");
-	fwrite(&arr[0], sizeof(PhoneBook), size, file);
+	//fwrite(&arr[0], sizeof(PhoneBook), size, file);
+
+	for (size_t i = 0; i < size; i++)
+	{
+		fwrite(&arr[i].SizeName, sizeof(int), 1, file);
+		fwrite(&arr[i].Number, sizeof(char), 20, file);
+		fwrite(&arr[i].Info, sizeof(char), 20, file);
+		fwrite(&arr[i].Name[0], sizeof(char), arr[i].SizeName, file);
+	}
+
 	fclose(file);
 }
 
-PhoneBook Add()
-{
-	PhoneBook temp;
-	temp.input();
-	cout << "Add sub" << endl;
-	system("pause");
-	return temp;
-}
+//PhoneBook Add()
+//{
+//	PhoneBook temp;
+//	temp.input();
+//	cout << "Add sub" << endl;
+//	system("pause");
+//	return temp;
+//}
 
 void AddSubscruber(PhoneBook* arr, int& size)
 {
-	arr[size+1] = Add();
+	arr[size].input();
 	size++;
 }
 
