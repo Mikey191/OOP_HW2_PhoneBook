@@ -146,8 +146,7 @@ void AddSubscruber(PhoneBook* arr, int& size)
 	temp.input();
 	cout << "Add sub" << endl;
 	system("pause");*/
-	arr[size].input();
-	size++;
+	arr[size++].input();
 }
 
 void DeleteSubscruber(PhoneBook* arr, int& size)
